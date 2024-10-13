@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ArchivedTask {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  content     String
+  title       String   @db.VarChar(30)
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id           Int            @id @default(autoincrement())
+  categoryName String         @db.VarChar(50)
+  TaskCategory TaskCategory[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  content    String
+  userId     Int
+  taskId     Int
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime
+  Task       Task     @relation(fields: [taskId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
+}
+
+model Subtask {
+  id             Int              @id @default(autoincrement())
+  title          String           @db.VarChar(30)
+  description    String?
+  status         String           @db.VarChar(20)
+  taskId         Int
+  priority       String           @db.VarChar(20)
+  updatedBy      Int?
+  created_at     DateTime         @default(now()) @db.Timestamp(6)
+  updated_at     DateTime
+  Task           Task             @relation(fields: [taskId], references: [id])
+  User           User?            @relation(fields: [updatedBy], references: [id])
+  SubtaskComment SubtaskComment[]
+}
+
+model SubtaskComment {
+  id         Int      @id @default(autoincrement())
+  content    String
+  userId     Int
+  subtaskId  Int
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime
+  Subtask    Subtask  @relation(fields: [subtaskId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
+}
+
+model Task {
+  id                        Int            @id @default(autoincrement())
+  title                     String         @db.VarChar(30)
+  description               String?
+  status                    String         @db.VarChar(20)
+  userId                    Int
+  priority                  String         @db.VarChar(20)
+  updatedBy                 Int?
+  created_at                DateTime       @default(now()) @db.Timestamp(6)
+  updated_at                DateTime
+  Comment                   Comment[]
+  Subtask                   Subtask[]
+  User_Task_updatedByToUser User?          @relation("Task_updatedByToUser", fields: [updatedBy], references: [id])
+  User_Task_userIdToUser    User           @relation("Task_userIdToUser", fields: [userId], references: [id])
+  TaskCategory              TaskCategory[]
+}
+
+model TaskCategory {
+  id         Int      @id @default(autoincrement())
+  taskId     Int
+  categoryId Int
+  Category   Category @relation(fields: [categoryId], references: [id])
+  Task       Task     @relation(fields: [taskId], references: [id])
+}
+
+model User {
+  id                        Int              @id @default(autoincrement())
+  username                  String           @db.VarChar(100)
+  first_name                String           @db.VarChar(100)
+  last_name                 String           @db.VarChar(100)
+  email                     String           @unique @db.VarChar(100)
+  password                  String           @db.VarChar(255)
+  created_at                DateTime         @default(now()) @db.Timestamp(6)
+  ArchivedTask              ArchivedTask[]
+  Comment                   Comment[]
+  Subtask                   Subtask[]
+  SubtaskComment            SubtaskComment[]
+  Task_Task_updatedByToUser Task[]           @relation("Task_updatedByToUser")
+  Task_Task_userIdToUser    Task[]           @relation("Task_userIdToUser")
+}
