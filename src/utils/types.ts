@@ -1,6 +1,6 @@
 export enum Status {
   TO_DO = "TO_DO",
-  IN_PROGRESS = "IN_PROGESS",
+  IN_PROGRESS = "IN_PROGRESS",
   ON_HOLD = "ON_HOLD",
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",
