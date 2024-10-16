@@ -80,12 +80,22 @@ const replaceTaskById = async (req: Request, res: Response) => {
       return;
     }
 
-    const replacedTask = await replaceTaskByIdService(Number(taskId), {
-      title,
-      description,
-      status,
-      priority,
-    });
+    const isAuthorizated = checkAuthorization(
+      taskExists.userId === Number(userId),
+      res
+    );
+    if (!isAuthorizated) return;
+
+    const replacedTask = await replaceTaskByIdService(
+      Number(userId),
+      Number(taskId),
+      {
+        title,
+        description,
+        status,
+        priority,
+      }
+    );
 
     res.status(200).json({ status: 200, replacedTask });
   } catch (err) {
@@ -110,12 +120,22 @@ const updateTaskById = async (req: Request, res: Response) => {
       return;
     }
 
-    const updatedTask = await updateTaskByIdService(Number(taskId), {
-      title,
-      description,
-      status,
-      priority,
-    });
+    const isAuthorizated = checkAuthorization(
+      taskExists.userId === Number(userId),
+      res
+    );
+    if (!isAuthorizated) return;
+
+    const updatedTask = await updateTaskByIdService(
+      Number(userId),
+      Number(taskId),
+      {
+        title,
+        description,
+        status,
+        priority,
+      }
+    );
 
     res.status(200).json({ status: 200, updatedTask });
   } catch (err) {

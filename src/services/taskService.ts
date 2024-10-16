@@ -36,7 +36,11 @@ const getTaskByIdsService = async (userId: number, taskId: number) => {
   return tasks;
 };
 
-const replaceTaskByIdService = async (taskId: number, task: Task) => {
+const replaceTaskByIdService = async (
+  userId: number,
+  taskId: number,
+  task: Task
+) => {
   const replacedTask = await prisma.task.update({
     where: {
       id: Number(taskId),
@@ -46,13 +50,18 @@ const replaceTaskByIdService = async (taskId: number, task: Task) => {
       description: task.description,
       status: task.status,
       priority: task.priority,
+      updatedBy: Number(userId),
     },
   });
 
   return replacedTask;
 };
 
-const updateTaskByIdService = async (taskId: number, task: Task) => {
+const updateTaskByIdService = async (
+  userId: number,
+  taskId: number,
+  task: Task
+) => {
   const updatedTask = await prisma.task.update({
     where: {
       id: Number(taskId),
@@ -62,6 +71,7 @@ const updateTaskByIdService = async (taskId: number, task: Task) => {
       ...(task.description !== undefined && { description: task.description }),
       ...(task.status !== undefined && { status: task.status }),
       ...(task.priority !== undefined && { priority: task.priority }),
+      updatedBy: Number(userId),
     },
   });
   return updatedTask;
