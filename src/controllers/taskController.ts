@@ -30,8 +30,8 @@ const createTask = async (req: Request, res: Response) => {
     const createdTask = await createTaskService(Number(userId), task);
 
     res.status(201).json({ status: 201, task: createdTask });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
@@ -44,8 +44,8 @@ const getAllTasksById = async (req: Request, res: Response) => {
     const tasks = await getAllTasksByIdService(Number(userId));
 
     res.status(200).json({ status: 200, tasks });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
@@ -58,8 +58,8 @@ const getTaskByIds = async (req: Request, res: Response) => {
     const task = await getTaskByIdsService(Number(userId), Number(taskId));
 
     res.status(200).json({ status: 200, task });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
@@ -98,8 +98,8 @@ const replaceTaskById = async (req: Request, res: Response) => {
     );
 
     res.status(200).json({ status: 200, replacedTask });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
@@ -138,8 +138,8 @@ const updateTaskById = async (req: Request, res: Response) => {
     );
 
     res.status(200).json({ status: 200, updatedTask });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
@@ -168,8 +168,8 @@ const deleteTaskById = async (req: Request, res: Response) => {
     await deleteTaskByIdService(Number(taskId));
 
     res.status(200).json({ status: 200, message: "Task deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ status: 500, error: err });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
   }
 };
 
