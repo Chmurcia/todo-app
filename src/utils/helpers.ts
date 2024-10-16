@@ -8,11 +8,24 @@ export const checkUserExists = async (userId: number, res: Response) => {
   if (!userExists) {
     res.status(404).json({
       status: 404,
-      message: `User with id ${userId} doesn't exist!`,
+      message: "User not found",
     });
     return null;
   }
   return userExists;
+};
+
+export const checkTaskExists = async (taskId: number, res: Response) => {
+  const taskExists = await prisma.task.findUnique({
+    where: {
+      id: Number(taskId),
+    },
+  });
+  if (!taskExists) {
+    res.status(404).json({ status: 404, message: "Task not found" });
+    return null;
+  }
+  return taskExists;
 };
 
 export const checkAuthorization = (condition: boolean, res: Response) => {
