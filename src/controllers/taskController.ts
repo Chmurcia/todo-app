@@ -8,7 +8,11 @@ import {
   updateTaskByIdService,
 } from "../services/taskService";
 import { prisma } from "../utils/prisma";
-import { checkAuthorization, checkUserExists } from "../utils/helpers";
+import {
+  checkAuthorization,
+  checkTaskExists,
+  checkUserExists,
+} from "../utils/helpers";
 
 const createTask = async (req: Request, res: Response) => {
   const { userId } = req.params;
@@ -70,15 +74,8 @@ const replaceTaskById = async (req: Request, res: Response) => {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const taskExists = await prisma.task.findUnique({
-      where: {
-        id: Number(taskId),
-      },
-    });
-    if (!taskExists) {
-      res.status(404).json({ status: 404, message: "Task not found" });
-      return;
-    }
+    const taskExists = await checkTaskExists(Number(taskId), res);
+    if (!taskExists) return;
 
     const isAuthorizated = checkAuthorization(
       taskExists.userId === Number(userId),
@@ -110,15 +107,8 @@ const updateTaskById = async (req: Request, res: Response) => {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const taskExists = await prisma.task.findUnique({
-      where: {
-        id: Number(taskId),
-      },
-    });
-    if (!taskExists) {
-      res.status(404).json({ status: 404, message: "Task not found" });
-      return;
-    }
+    const taskExists = await checkTaskExists(Number(taskId), res);
+    if (!taskExists) return;
 
     const isAuthorizated = checkAuthorization(
       taskExists.userId === Number(userId),
@@ -149,15 +139,8 @@ const deleteTaskById = async (req: Request, res: Response) => {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const taskExists = await prisma.task.findUnique({
-      where: {
-        id: Number(taskId),
-      },
-    });
-    if (!taskExists) {
-      res.status(404).json({ status: 404, message: "Task not found" });
-      return;
-    }
+    const taskExists = await checkTaskExists(Number(taskId), res);
+    if (!taskExists) return;
 
     const isAuthorizated = checkAuthorization(
       taskExists.userId === Number(userId),
