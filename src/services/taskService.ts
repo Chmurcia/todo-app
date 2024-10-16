@@ -36,4 +36,50 @@ const getTaskByIdsService = async (userId: number, taskId: number) => {
   return tasks;
 };
 
-export { createTaskService, getAllTasksByIdService, getTaskByIdsService };
+const replaceTaskByIdService = async (taskId: number, task: Task) => {
+  const replacedTask = await prisma.task.update({
+    where: {
+      id: Number(taskId),
+    },
+    data: {
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+    },
+  });
+
+  return replacedTask;
+};
+
+const updateTaskByIdService = async (taskId: number, task: Task) => {
+  const updatedTask = await prisma.task.update({
+    where: {
+      id: Number(taskId),
+    },
+    data: {
+      ...(task.title !== undefined && { title: task.title }),
+      ...(task.description !== undefined && { description: task.description }),
+      ...(task.status !== undefined && { status: task.status }),
+      ...(task.priority !== undefined && { priority: task.priority }),
+    },
+  });
+  return updatedTask;
+};
+
+const deleteTaskByIdService = async (taskId: number) => {
+  await prisma.task.delete({
+    where: {
+      id: Number(taskId),
+    },
+  });
+};
+
+export {
+  createTaskService,
+  getAllTasksByIdService,
+  getTaskByIdsService,
+  replaceTaskByIdService,
+  updateTaskByIdService,
+  deleteTaskByIdService,
+};
