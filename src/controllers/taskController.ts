@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import {
   createTaskService,
-  deleteTaskByIdService,
-  getAllTasksByIdService,
-  getTaskByIdsService,
-  replaceTaskByIdService,
-  updateTaskByIdService,
+  getAllTasksByUserIdService,
+  getTaskByUserIdTaskIdService,
+  replaceTaskByUserIdTaskIdService,
+  updateTaskByUserIdTaskIdService,
+  deleteTaskByTaskIdService,
 } from "../services/taskService";
 import { prisma } from "../utils/prisma";
 import {
@@ -39,13 +39,13 @@ const createTask = async (req: Request, res: Response) => {
   }
 };
 
-const getAllTasksById = async (req: Request, res: Response) => {
+const getAllTasksByUserId = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const tasks = await getAllTasksByIdService(Number(userId));
+    const tasks = await getAllTasksByUserIdService(Number(userId));
 
     res.status(200).json({ status: 200, tasks });
   } catch (error) {
@@ -53,13 +53,13 @@ const getAllTasksById = async (req: Request, res: Response) => {
   }
 };
 
-const getTaskByIds = async (req: Request, res: Response) => {
+const getTaskByUserIdTaskId = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const task = await getTaskByIdsService(Number(userId), Number(taskId));
+    const task = await getTaskByUserIdTaskIdService(Number(userId), Number(taskId));
 
     res.status(200).json({ status: 200, task });
   } catch (error) {
@@ -67,7 +67,7 @@ const getTaskByIds = async (req: Request, res: Response) => {
   }
 };
 
-const replaceTaskById = async (req: Request, res: Response) => {
+const replaceTaskByUserIdTaskId = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
   const { title, description, status, priority } = req.body;
   try {
@@ -83,7 +83,7 @@ const replaceTaskById = async (req: Request, res: Response) => {
     );
     if (!isAuthorizated) return;
 
-    const replacedTask = await replaceTaskByIdService(
+    const replacedTask = await replaceTaskByUserIdTaskIdService(
       Number(userId),
       Number(taskId),
       {
@@ -100,7 +100,7 @@ const replaceTaskById = async (req: Request, res: Response) => {
   }
 };
 
-const updateTaskById = async (req: Request, res: Response) => {
+const updateTaskByUserIdTaskId = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
   const { title, description, status, priority } = req.body;
   try {
@@ -116,7 +116,7 @@ const updateTaskById = async (req: Request, res: Response) => {
     );
     if (!isAuthorizated) return;
 
-    const updatedTask = await updateTaskByIdService(
+    const updatedTask = await updateTaskByUserIdTaskIdService(
       Number(userId),
       Number(taskId),
       {
@@ -133,7 +133,7 @@ const updateTaskById = async (req: Request, res: Response) => {
   }
 };
 
-const deleteTaskById = async (req: Request, res: Response) => {
+const deleteTaskByTaskId = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
   try {
     const userExists = await checkUserExists(Number(userId), res);
@@ -148,7 +148,7 @@ const deleteTaskById = async (req: Request, res: Response) => {
     );
     if (!isAuthorizated) return;
 
-    await deleteTaskByIdService(Number(taskId));
+    await deleteTaskByTaskIdService(Number(taskId));
 
     res.status(200).json({ status: 200, message: "Task deleted successfully" });
   } catch (error) {
@@ -158,9 +158,9 @@ const deleteTaskById = async (req: Request, res: Response) => {
 
 export {
   createTask,
-  getAllTasksById,
-  getTaskByIds,
-  replaceTaskById,
-  updateTaskById,
-  deleteTaskById,
+  getAllTasksByUserId,
+  getTaskByUserIdTaskId,
+  replaceTaskByUserIdTaskId,
+  updateTaskByUserIdTaskId,
+  deleteTaskByTaskId,
 };
