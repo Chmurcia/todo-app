@@ -21,3 +21,8 @@ export type Task = {
   status: Status;
   priority: Priority;
 };
+
+export type ArchivedTask = {
+  title: string;
+  description?: string;
+};
