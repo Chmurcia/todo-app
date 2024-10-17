@@ -28,6 +28,22 @@ export const checkTaskExists = async (taskId: number, res: Response) => {
   return taskExists;
 };
 
+export const checkCategoryExists = async (
+  categoryId: number,
+  res: Response
+) => {
+  const categoryExists = await prisma.category.findUnique({
+    where: {
+      id: Number(categoryId),
+    },
+  });
+  if (!categoryExists) {
+    res.status(404).json({ status: 404, message: "Category not found" });
+    return null;
+  }
+  return categoryExists;
+};
+
 export const checkAuthorization = (condition: boolean, res: Response) => {
   if (!condition) {
     res.status(403).json({ status: 403, message: "Authorization failed" });
