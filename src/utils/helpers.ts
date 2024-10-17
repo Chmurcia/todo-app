@@ -28,6 +28,22 @@ export const checkTaskExists = async (taskId: number, res: Response) => {
   return taskExists;
 };
 
+export const checkArchivedTaskExists = async (
+  archivedTaskId: number,
+  res: Response
+) => {
+  const archivedTaskExists = await prisma.archivedTask.findUnique({
+    where: {
+      id: Number(archivedTaskId),
+    },
+  });
+  if (!archivedTaskExists) {
+    res.status(404).json({ status: 404, message: "Archived task not found" });
+    return null;
+  }
+  return archivedTaskExists;
+};
+
 export const checkCategoryExists = async (
   categoryId: number,
   res: Response
