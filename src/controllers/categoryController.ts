@@ -7,11 +7,11 @@ import {
 import {
   createCategoryService,
   createTaskCategoryService,
-  deleteCategoryByCategoryIdService,
-  getCategoriesByTaskIdService,
+  deleteCategoryService,
+  getCategoriesByUserService,
   getCategoriesService,
-  getCategoryByCategoryIdService,
-  updateCategoryByCategoryIdService,
+  getCategoryService,
+  updateCategoryService,
 } from "../services/categoryService";
 import { prisma } from "../utils/prisma";
 
@@ -63,13 +63,13 @@ const createTaskCategory = async (req: Request, res: Response) => {
   }
 };
 
-const getCategoryByCategoryId = async (req: Request, res: Response) => {
+const getCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   try {
     const categoryExists = await checkCategoryExists(Number(categoryId), res);
     if (!categoryExists) return;
 
-    const category = await getCategoryByCategoryIdService(Number(categoryId));
+    const category = await getCategoryService(Number(categoryId));
 
     res.status(200).json({ status: 200, category });
   } catch (error) {
@@ -78,22 +78,12 @@ const getCategoryByCategoryId = async (req: Request, res: Response) => {
 };
 
 const getCategories = async (req: Request, res: Response) => {
-  try {
-    const categories = await getCategoriesService();
-
-    res.status(200).json({ status: 200, categories });
-  } catch (error) {
-    res.status(500).json({ status: 500, error });
-  }
-};
-
-const getCategoriesByTaskId = async (req: Request, res: Response) => {
   const { taskId } = req.params;
   try {
     const taskExists = await checkTaskExists(Number(taskId), res);
     if (!taskExists) return;
 
-    const categories = await getCategoriesByTaskIdService(Number(taskId));
+    const categories = await getCategoriesService(Number(taskId));
 
     res.status(200).json({ status: 200, categories });
   } catch (error) {
@@ -101,14 +91,28 @@ const getCategoriesByTaskId = async (req: Request, res: Response) => {
   }
 };
 
-const updateCategoryByCategoryId = async (req: Request, res: Response) => {
+const getCategoriesByUser = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try {
+    const userExists = await checkUserExists(Number(userId), res);
+    if (!userExists) return;
+
+    const categories = await getCategoriesByUserService(Number(userId));
+
+    res.status(200).json({ status: 200, categories });
+  } catch (error) {
+    res.status(500).json({ status: 500, error });
+  }
+};
+
+const updateCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   const { categoryName } = req.body;
   try {
     const categoryExists = await checkCategoryExists(Number(categoryId), res);
     if (!categoryExists) return;
 
-    const updatedCategory = await updateCategoryByCategoryIdService(
+    const updatedCategory = await updateCategoryService(
       Number(categoryId),
       categoryName
     );
@@ -119,13 +123,13 @@ const updateCategoryByCategoryId = async (req: Request, res: Response) => {
   }
 };
 
-const deleteCategoryByCategoryId = async (req: Request, res: Response) => {
+const deleteCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   try {
     const categoryExists = await checkCategoryExists(Number(categoryId), res);
     if (!categoryExists) return;
 
-    await deleteCategoryByCategoryIdService(Number(categoryId));
+    await deleteCategoryService(Number(categoryId));
 
     res
       .status(200)
@@ -138,9 +142,9 @@ const deleteCategoryByCategoryId = async (req: Request, res: Response) => {
 export {
   createCategory,
   createTaskCategory,
-  getCategoryByCategoryId,
+  getCategory,
   getCategories,
-  getCategoriesByTaskId,
-  updateCategoryByCategoryId,
-  deleteCategoryByCategoryId,
+  getCategoriesByUser,
+  updateCategory,
+  deleteCategory,
 };

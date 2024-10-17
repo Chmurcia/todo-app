@@ -3,6 +3,7 @@ import { prisma } from "../utils/prisma";
 const createCategoryService = async (userId: number, categoryName: string) => {
   const category = await prisma.category.create({
     data: {
+      userId: Number(userId),
       categoryName,
     },
   });
@@ -16,15 +17,15 @@ const createTaskCategoryService = async (
 ) => {
   const taskCategory = await prisma.taskCategory.create({
     data: {
-      categoryId: Number(categoryId),
       taskId: Number(taskId),
+      categoryId: Number(categoryId),
     },
   });
 
   return taskCategory;
 };
 
-const getCategoryByCategoryIdService = async (categoryId: number) => {
+const getCategoryService = async (categoryId: number) => {
   const category = await prisma.category.findUnique({
     where: {
       id: Number(categoryId),
@@ -33,12 +34,7 @@ const getCategoryByCategoryIdService = async (categoryId: number) => {
   return category;
 };
 
-const getCategoriesService = async () => {
-  const categories = await prisma.category.findMany();
-  return categories;
-};
-
-const getCategoriesByTaskIdService = async (taskId: number) => {
+const getCategoriesService = async (taskId: number) => {
   const categories = await prisma.category.findMany({
     where: {
       TaskCategory: {
@@ -51,7 +47,16 @@ const getCategoriesByTaskIdService = async (taskId: number) => {
   return categories;
 };
 
-const updateCategoryByCategoryIdService = async (
+const getCategoriesByUserService = async (userId: number) => {
+  const categories = await prisma.category.findMany({
+    where: {
+      userId: Number(userId),
+    },
+  });
+  return categories;
+};
+
+const updateCategoryService = async (
   categoryId: number,
   categoryName: string
 ) => {
@@ -67,7 +72,7 @@ const updateCategoryByCategoryIdService = async (
   return updatedCategory;
 };
 
-const deleteCategoryByCategoryIdService = async (categoryId: number) => {
+const deleteCategoryService = async (categoryId: number) => {
   await prisma.category.delete({
     where: {
       id: Number(categoryId),
@@ -78,9 +83,9 @@ const deleteCategoryByCategoryIdService = async (categoryId: number) => {
 export {
   createCategoryService,
   createTaskCategoryService,
-  getCategoryByCategoryIdService,
+  getCategoryService,
   getCategoriesService,
-  getCategoriesByTaskIdService,
-  updateCategoryByCategoryIdService,
-  deleteCategoryByCategoryIdService,
+  getCategoriesByUserService,
+  updateCategoryService,
+  deleteCategoryService,
 };
