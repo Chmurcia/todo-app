@@ -44,6 +44,19 @@ export const checkCategoryExists = async (
   return categoryExists;
 };
 
+export const checkCommentExists = async (commentId: number, res: Response) => {
+  const commentExists = await prisma.comment.findUnique({
+    where: {
+      id: Number(commentId),
+    },
+  });
+  if (!commentExists) {
+    res.status(404).json({ status: 404, message: "Comment not found" });
+    return null;
+  }
+  return commentExists;
+};
+
 export const checkAuthorization = (condition: boolean, res: Response) => {
   if (!condition) {
     res.status(403).json({ status: 403, message: "Authorization failed" });
