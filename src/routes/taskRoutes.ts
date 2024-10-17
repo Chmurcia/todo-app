@@ -1,24 +1,21 @@
 import { Router } from "express";
 import {
   createTask,
-  getAllTasksByUserId,
-  getTaskByUserIdTaskId,
-  replaceTaskByUserIdTaskId,
-  updateTaskByUserIdTaskId,
-  deleteTaskByTaskId,
+  getAllTasks,
+  getTask,
+  replaceTask,
+  updateTask,
+  deleteTask,
 } from "../controllers/taskController";
 
 const router = Router();
 
-router
-  .route("/api/v1/user/:userId/task")
-  .get(getAllTasksByUserId)
-  .post(createTask);
+router.route("/api/v1/user/:userId/task").get(getAllTasks).post(createTask);
 router
   .route("/api/v1/user/:userId/task/:taskId")
-  .get(getTaskByUserIdTaskId)
-  .put(replaceTaskByUserIdTaskId)
-  .patch(updateTaskByUserIdTaskId)
-  .delete(deleteTaskByTaskId);
+  .get(getTask)
+  .put(replaceTask)
+  .patch(updateTask)
+  .delete(deleteTask);
 
 export { router as taskRouter };

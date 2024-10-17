@@ -16,7 +16,7 @@ const createTaskService = async (userId: number, task: Task) => {
   return createdTask;
 };
 
-const getAllTasksByUserIdService = async (userId: number) => {
+const getAllTasksService = async (userId: number) => {
   const tasks = await prisma.task.findMany({
     where: {
       userId: Number(userId),
@@ -26,7 +26,7 @@ const getAllTasksByUserIdService = async (userId: number) => {
   return tasks;
 };
 
-const getTaskByUserIdTaskIdService = async (userId: number, taskId: number) => {
+const getTaskService = async (userId: number, taskId: number) => {
   const tasks = await prisma.task.findFirst({
     where: {
       AND: [{ id: Number(taskId) }, { userId: Number(userId) }],
@@ -36,7 +36,7 @@ const getTaskByUserIdTaskIdService = async (userId: number, taskId: number) => {
   return tasks;
 };
 
-const replaceTaskByUserIdTaskIdService = async (
+const replaceTaskService = async (
   userId: number,
   taskId: number,
   task: Task
@@ -57,7 +57,7 @@ const replaceTaskByUserIdTaskIdService = async (
   return replacedTask;
 };
 
-const updateTaskByUserIdTaskIdService = async (
+const updateTaskService = async (
   userId: number,
   taskId: number,
   task: Task
@@ -77,7 +77,7 @@ const updateTaskByUserIdTaskIdService = async (
   return updatedTask;
 };
 
-const deleteTaskByTaskIdService = async (taskId: number) => {
+const deleteTaskService = async (taskId: number) => {
   await prisma.task.delete({
     where: {
       id: Number(taskId),
@@ -87,9 +87,9 @@ const deleteTaskByTaskIdService = async (taskId: number) => {
 
 export {
   createTaskService,
-  getAllTasksByUserIdService,
-  getTaskByUserIdTaskIdService,
-  replaceTaskByUserIdTaskIdService,
-  updateTaskByUserIdTaskIdService,
-  deleteTaskByTaskIdService,
+  getAllTasksService,
+  getTaskService,
+  replaceTaskService,
+  updateTaskService,
+  deleteTaskService,
 };
