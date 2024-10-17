@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { testRouter } from "./routes/testRouter";
 import { taskRouter } from "./routes/taskRoutes";
+import { categoryRouter } from "./routes/categoryRoutes";
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(testRouter);
+app.use(categoryRouter);
 app.use(taskRouter);
 
 app.listen(PORT, () => console.log(`Server's listening on port ${PORT}`));
