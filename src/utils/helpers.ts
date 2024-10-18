@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { prisma } from "./prisma";
+import { Status, Priority } from "./types";
 
 export const checkUserExists = async (userId: number, res: Response) => {
   const userExists = await prisma.user.findUnique({
@@ -93,4 +94,12 @@ export const checkAuthorization = (condition: boolean, res: Response) => {
   }
 
   return true;
+};
+
+export const isValidStatus = (status: string): status is Status => {
+  return Object.values(Status).includes(status as Status);
+};
+
+export const isValidPriority = (priority: string): priority is Priority => {
+  return Object.values(Priority).includes(priority as Priority);
 };
