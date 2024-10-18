@@ -12,6 +12,8 @@ import {
   checkAuthorization,
   checkTaskExists,
   checkUserExists,
+  isValidPriority,
+  isValidStatus,
 } from "../utils/helpers";
 
 const createTask = async (req: Request, res: Response) => {
@@ -27,6 +29,16 @@ const createTask = async (req: Request, res: Response) => {
       )
     ) {
       res.status(400).json({ status: 400, message: "Invalid input types" });
+      return;
+    }
+
+    if (!isValidStatus(status)) {
+      res.status(400).json({ status: 400, message: "Invalid status value" });
+      return;
+    }
+
+    if (!isValidPriority(priority)) {
+      res.status(400).json({ status: 400, message: "Invalid priority value" });
       return;
     }
 
@@ -83,6 +95,16 @@ const replaceTask = async (req: Request, res: Response) => {
     );
     if (!isAuthorizated) return;
 
+    if (!isValidStatus(status)) {
+      res.status(400).json({ status: 400, message: "Invalid status value" });
+      return;
+    }
+
+    if (!isValidPriority(priority)) {
+      res.status(400).json({ status: 400, message: "Invalid priority value" });
+      return;
+    }
+
     const replacedTask = await replaceTaskService(
       Number(userId),
       Number(taskId),
@@ -115,6 +137,16 @@ const updateTask = async (req: Request, res: Response) => {
       res
     );
     if (!isAuthorizated) return;
+
+    if (!isValidStatus(status) && status !== undefined) {
+      res.status(400).json({ status: 400, message: "Invalid status value" });
+      return;
+    }
+
+    if (!isValidPriority(priority) && priority !== undefined) {
+      res.status(400).json({ status: 400, message: "Invalid priority value" });
+      return;
+    }
 
     const updatedTask = await updateTaskService(
       Number(userId),
