@@ -87,6 +87,22 @@ export const checkCommentExists = async (commentId: number, res: Response) => {
   return commentExists;
 };
 
+export const checkSubtaskCommentExists = async (
+  subtaskCommentId: number,
+  res: Response
+) => {
+  const subtaskCommentExists = await prisma.subtaskComment.findUnique({
+    where: {
+      id: Number(subtaskCommentId),
+    },
+  });
+  if (!subtaskCommentExists) {
+    res.status(404).json({ status: 404, message: "Subtask comment not found" });
+    return null;
+  }
+  return subtaskCommentExists;
+};
+
 export const checkAuthorization = (condition: boolean, res: Response) => {
   if (!condition) {
     res.status(403).json({ status: 403, message: "Authorization failed" });
