@@ -12,8 +12,8 @@ const router = Router();
 
 router
   .route("/api/v1/user/:userId/task/:taskId/subtask")
-  .post(createSubtask)
-  .get(getSubtasks);
+  .get(getSubtasks)
+  .post(createSubtask);
 
 router
   .route("/api/v1/user/:userId/task/:taskId/subtask/:subtaskId")
