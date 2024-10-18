@@ -4,6 +4,7 @@ import { taskRouter } from "./routes/taskRoutes";
 import { categoryRouter } from "./routes/categoryRoutes";
 import { commentRouter } from "./routes/taskCommentRoutes";
 import { archivedRouter } from "./routes/archivedTaskRoutes";
+import { subtaskRouter } from "./routes/subtaskRoutes";
 
 dotenv.config();
 
@@ -17,5 +18,6 @@ app.use(taskRouter);
 app.use(categoryRouter);
 app.use(commentRouter);
 app.use(archivedRouter);
+app.use(subtaskRouter);
 
 app.listen(PORT, () => console.log(`Server's listening on port ${PORT}`));
