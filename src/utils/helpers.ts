@@ -28,6 +28,19 @@ export const checkTaskExists = async (taskId: number, res: Response) => {
   return taskExists;
 };
 
+export const checkSubtaskExists = async (subtaskId: number, res: Response) => {
+  const subtaskExists = await prisma.subtask.findUnique({
+    where: {
+      id: Number(subtaskId),
+    },
+  });
+  if (!subtaskExists) {
+    res.status(404).json({ status: 404, message: "Subtask not found" });
+    return null;
+  }
+  return subtaskExists;
+};
+
 export const checkArchivedTaskExists = async (
   archivedTaskId: number,
   res: Response
