@@ -10,10 +10,11 @@ import {
   createSubtaskService,
   deleteSubtaskService,
   getSubtaskService,
-  getSubtasksService,
+  getAllSubtasksService,
   replaceSubtaskService,
   updateSubtaskService,
 } from "../services/subtaskService";
+import { TaskFilters, TaskSort } from "../utils/types";
 
 const createSubtask = async (req: Request, res: Response) => {
   const { taskId } = req.params;
@@ -50,13 +51,46 @@ const createSubtask = async (req: Request, res: Response) => {
   }
 };
 
-const getSubtasks = async (req: Request, res: Response) => {
+const getAllSubtasks = async (req: Request, res: Response) => {
   const { taskId } = req.params;
+  const filterBy = req.query.filterBy as string;
+  const sort = req.query.sort as string;
+  const { page = 1, limit = 10 } = req.query;
+
+  let filters: TaskFilters = {};
+  let sortBy: TaskSort = {};
+
+  if (filterBy) {
+    const parsedFilters = JSON.parse(filterBy);
+    filters = {
+      status: parsedFilters.status,
+      priority: parsedFilters.priority,
+    };
+  }
+
+  if (sort) {
+    const parsedSort = JSON.parse(sort);
+    sortBy = Object.keys(parsedSort).reduce((acc, key) => {
+      acc[key] = parsedSort[key] === "asc" ? "asc" : "desc";
+      return acc;
+    }, {} as TaskSort);
+  }
+
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+  const skip = (pageNum - 1) * limitNum;
+
   try {
     const taskExists = await checkTaskExists(Number(taskId), res);
     if (!taskExists) return;
 
-    const subtasks = await getSubtasksService(Number(taskId));
+    const subtasks = await getAllSubtasksService(
+      Number(taskId),
+      filters,
+      sortBy,
+      skip,
+      limitNum
+    );
 
     res.status(200).json({ status: 200, subtasks });
   } catch (error) {
@@ -172,7 +206,7 @@ const deleteSubtask = async (req: Request, res: Response) => {
 
 export {
   createSubtask,
-  getSubtasks,
+  getAllSubtasks,
   getSubtask,
   replaceSubtask,
   updateSubtask,

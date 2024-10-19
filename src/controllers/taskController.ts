@@ -15,6 +15,7 @@ import {
   isValidPriority,
   isValidStatus,
 } from "../utils/helpers";
+import { TaskFilters, TaskSort } from "../utils/types";
 
 const createTask = async (req: Request, res: Response) => {
   const { userId } = req.params;
@@ -53,11 +54,48 @@ const createTask = async (req: Request, res: Response) => {
 
 const getAllTasks = async (req: Request, res: Response) => {
   const { userId } = req.params;
+  const filterBy = req.query.filterBy as string;
+  const sort = req.query.sort as string;
+  const { categoryId, page = 1, limit = 10 } = req.query;
+
+  let filters: TaskFilters = {};
+  let sortBy: TaskSort = {};
+
+  if (filterBy) {
+    const parsedFilters = JSON.parse(filterBy);
+    filters = {
+      status: parsedFilters.status || undefined,
+      priority: parsedFilters.priority || undefined,
+    };
+  }
+
+  if (categoryId) {
+    filters.categoryId = Number(categoryId);
+  }
+
+  if (sort) {
+    const parsedSort = JSON.parse(sort);
+    sortBy = Object.keys(parsedSort).reduce((acc, key) => {
+      acc[key] = parsedSort[key] === "asc" ? "asc" : "desc";
+      return acc;
+    }, {} as TaskSort);
+  }
+
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+  const skip = (pageNum - 1) * limitNum;
+
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const tasks = await getAllTasksService(Number(userId));
+    const tasks = await getAllTasksService(
+      Number(userId),
+      filters,
+      sortBy,
+      skip,
+      limitNum
+    );
 
     res.status(200).json({ status: 200, tasks });
   } catch (error) {

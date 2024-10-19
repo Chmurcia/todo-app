@@ -1,21 +1,3 @@
-enum Status {
-  TO_DO
-  IN_PROGRESS
-  ON_HOLD
-  COMPLETED
-  CANCELLED
-  DEFERRED
-}
-
-enum Priority {
-  OPTIONAL
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
-  ASAP
-}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -28,7 +10,6 @@ datasource db {
 model ArchivedTask {
   id          Int      @id @default(autoincrement())
   userId      Int
-  content     String
   title       String   @db.VarChar(30)
   description String?
   created_at  DateTime @default(now()) @db.Timestamp(6)
@@ -38,6 +19,8 @@ model ArchivedTask {
 model Category {
   id           Int            @id @default(autoincrement())
   categoryName String         @db.VarChar(50)
+  userId       Int?
+  User         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
   TaskCategory TaskCategory[]
 }
 
@@ -47,7 +30,7 @@ model Comment {
   userId     Int
   taskId     Int
   created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime
+  updated_at DateTime @updatedAt
   Task       Task     @relation(fields: [taskId], references: [id])
   User       User     @relation(fields: [userId], references: [id])
 }
@@ -56,12 +39,12 @@ model Subtask {
   id             Int              @id @default(autoincrement())
   title          String           @db.VarChar(30)
   description    String?
-  status         Status    
+  status         Status
   taskId         Int
-  priority       Priority           
+  priority       Priority
   updatedBy      Int?
   created_at     DateTime         @default(now()) @db.Timestamp(6)
-  updated_at     DateTime
+  updated_at     DateTime         @updatedAt
   Task           Task             @relation(fields: [taskId], references: [id])
   User           User?            @relation(fields: [updatedBy], references: [id])
   SubtaskComment SubtaskComment[]
@@ -73,7 +56,7 @@ model SubtaskComment {
   userId     Int
   subtaskId  Int
   created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime
+  updated_at DateTime @updatedAt
   Subtask    Subtask  @relation(fields: [subtaskId], references: [id])
   User       User     @relation(fields: [userId], references: [id])
 }
@@ -82,7 +65,7 @@ model Task {
   id                        Int            @id @default(autoincrement())
   title                     String         @db.VarChar(30)
   description               String?
-  status                    Status       
+  status                    Status
   userId                    Int
   priority                  Priority
   updatedBy                 Int?
@@ -99,8 +82,8 @@ model TaskCategory {
   id         Int      @id @default(autoincrement())
   taskId     Int
   categoryId Int
-  Category   Category @relation(fields: [categoryId], references: [id])
-  Task       Task     @relation(fields: [taskId], references: [id])
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  Task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -112,9 +95,28 @@ model User {
   password                  String           @db.VarChar(255)
   created_at                DateTime         @default(now()) @db.Timestamp(6)
   ArchivedTask              ArchivedTask[]
+  Category                  Category[]
   Comment                   Comment[]
   Subtask                   Subtask[]
   SubtaskComment            SubtaskComment[]
   Task_Task_updatedByToUser Task[]           @relation("Task_updatedByToUser")
   Task_Task_userIdToUser    Task[]           @relation("Task_userIdToUser")
+}
+
+enum Status {
+  TO_DO
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+  DEFERRED
+}
+
+enum Priority {
+  OPTIONAL
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+  ASAP
 }

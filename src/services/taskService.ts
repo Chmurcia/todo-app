@@ -1,5 +1,5 @@
 import { prisma } from "../utils/prisma";
-import { Task } from "../utils/types";
+import { Task, TaskFilters, TaskSort } from "../utils/types";
 
 const createTaskService = async (userId: number, task: Task) => {
   const createdTask = await prisma.task.create({
@@ -16,11 +16,31 @@ const createTaskService = async (userId: number, task: Task) => {
   return createdTask;
 };
 
-const getAllTasksService = async (userId: number) => {
+const getAllTasksService = async (
+  userId: number,
+  filters: TaskFilters,
+  sortBy: TaskSort,
+  skip: number,
+  limit: number
+) => {
+  const orderBy = sortBy ? sortBy : undefined;
+
   const tasks = await prisma.task.findMany({
     where: {
       userId: Number(userId),
+      ...(filters.status !== undefined && { status: filters.status }),
+      ...(filters.priority !== undefined && { priority: filters.priority }),
+      ...(filters.categoryId !== undefined && {
+        TaskCategory: {
+          some: {
+            categoryId: Number(filters.categoryId),
+          },
+        },
+      }),
     },
+    orderBy,
+    skip,
+    take: limit,
   });
 
   return tasks;

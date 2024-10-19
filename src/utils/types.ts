@@ -26,3 +26,18 @@ export type ArchivedTask = {
   title: string;
   description?: string;
 };
+
+export type TaskFilters = {
+  status?: Status;
+  priority?: Priority;
+  categoryId?: number;
+};
+
+export type SubtaskFilters = {
+  status?: Status;
+  priority?: Priority;
+};
+
+export type TaskSort = {
+  [key: string]: "asc" | "desc";
+};

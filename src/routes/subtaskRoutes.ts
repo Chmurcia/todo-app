@@ -3,7 +3,7 @@ import {
   createSubtask,
   deleteSubtask,
   getSubtask,
-  getSubtasks,
+  getAllSubtasks,
   replaceSubtask,
   updateSubtask,
 } from "../controllers/subtaskController";
@@ -12,7 +12,7 @@ const router = Router();
 
 router
   .route("/api/v1/user/:userId/task/:taskId/subtask")
-  .get(getSubtasks)
+  .get(getAllSubtasks)
   .post(createSubtask);
 
 router

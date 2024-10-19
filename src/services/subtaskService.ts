@@ -1,5 +1,5 @@
 import { prisma } from "../utils/prisma";
-import { Task } from "../utils/types";
+import { SubtaskFilters, Task, TaskSort } from "../utils/types";
 
 const createSubtaskService = async (taskId: number, subtask: Task) => {
   const createdSubtask = await prisma.subtask.create({
@@ -16,11 +16,23 @@ const createSubtaskService = async (taskId: number, subtask: Task) => {
   return createdSubtask;
 };
 
-const getSubtasksService = async (taskId: number) => {
+const getAllSubtasksService = async (
+  taskId: number,
+  filters: SubtaskFilters,
+  sortBy: TaskSort,
+  skip: number,
+  limit: number
+) => {
+  const orderBy = sortBy ? sortBy : undefined;
   const subtasks = await prisma.subtask.findMany({
     where: {
       taskId: Number(taskId),
+      ...(filters.status !== undefined && { status: filters.status }),
+      ...(filters.priority !== undefined && { priority: filters.priority }),
     },
+    orderBy,
+    skip,
+    take: limit,
   });
 
   return subtasks;
@@ -90,7 +102,7 @@ const deleteSubtaskService = async (subtaskId: number) => {
 
 export {
   createSubtaskService,
-  getSubtasksService,
+  getAllSubtasksService,
   getSubtaskService,
   replaceSubtaskService,
   updateSubtaskService,
