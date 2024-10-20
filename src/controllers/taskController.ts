@@ -7,7 +7,6 @@ import {
   updateTaskService,
   deleteTaskService,
 } from "../services/taskService";
-import { prisma } from "../utils/prisma";
 import {
   checkAuthorization,
   checkTaskExists,
@@ -19,7 +18,7 @@ import { TaskFilters, TaskSort } from "../utils/types";
 
 const createTask = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -43,7 +42,7 @@ const createTask = async (req: Request, res: Response) => {
       return;
     }
 
-    const task = { title, description, status, priority };
+    const task = { title, description, status, priority, dueDate };
     const createdTask = await createTaskService(Number(userId), task);
 
     res
@@ -122,7 +121,7 @@ const getTask = async (req: Request, res: Response) => {
 
 const replaceTask = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -154,6 +153,7 @@ const replaceTask = async (req: Request, res: Response) => {
         description,
         status,
         priority,
+        dueDate,
       }
     );
 
@@ -165,7 +165,7 @@ const replaceTask = async (req: Request, res: Response) => {
 
 const updateTask = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -197,6 +197,7 @@ const updateTask = async (req: Request, res: Response) => {
         description,
         status,
         priority,
+        dueDate,
       }
     );
 

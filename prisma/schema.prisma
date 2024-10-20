@@ -45,6 +45,7 @@ model Subtask {
   updatedBy      Int?
   created_at     DateTime         @default(now()) @db.Timestamp(6)
   updated_at     DateTime         @updatedAt
+  duedate        DateTime?        @db.Timestamp(6)
   Task           Task             @relation(fields: [taskId], references: [id])
   User           User?            @relation(fields: [updatedBy], references: [id])
   SubtaskComment SubtaskComment[]
@@ -71,6 +72,7 @@ model Task {
   updatedBy                 Int?
   created_at                DateTime       @default(now()) @db.Timestamp(6)
   updated_at                DateTime       @updatedAt
+  duedate                   DateTime?      @db.Timestamp(6)
   Comment                   Comment[]
   Subtask                   Subtask[]
   User_Task_updatedByToUser User?          @relation("Task_updatedByToUser", fields: [updatedBy], references: [id])

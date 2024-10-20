@@ -20,6 +20,7 @@ export type Task = {
   description?: string;
   status: Status;
   priority: Priority;
+  dueDate: Date;
 };
 
 export type ArchivedTask = {

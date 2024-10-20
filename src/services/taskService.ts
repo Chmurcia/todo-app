@@ -8,6 +8,7 @@ const createTaskService = async (userId: number, task: Task) => {
       description: task.description,
       status: task.status,
       priority: task.priority,
+      duedate: task.dueDate,
       userId: Number(userId),
       updatedBy: undefined,
     },
@@ -70,6 +71,7 @@ const replaceTaskService = async (
       description: task.description,
       status: task.status,
       priority: task.priority,
+      duedate: task.dueDate,
       updatedBy: Number(userId),
     },
   });
@@ -91,6 +93,7 @@ const updateTaskService = async (
       ...(task.description !== undefined && { description: task.description }),
       ...(task.status !== undefined && { status: task.status }),
       ...(task.priority !== undefined && { priority: task.priority }),
+      ...(task.dueDate !== undefined && { duedate: task.dueDate }),
       updatedBy: Number(userId),
     },
   });

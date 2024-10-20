@@ -18,7 +18,7 @@ import { TaskFilters, TaskSort } from "../utils/types";
 
 const createSubtask = async (req: Request, res: Response) => {
   const { userId, taskId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -44,7 +44,7 @@ const createSubtask = async (req: Request, res: Response) => {
       return;
     }
 
-    const subtask = { title, description, status, priority };
+    const subtask = { title, description, status, priority, dueDate };
 
     const createdSubtask = await createSubtaskService(Number(taskId), subtask);
 
@@ -122,7 +122,7 @@ const getSubtask = async (req: Request, res: Response) => {
 
 const replaceSubtask = async (req: Request, res: Response) => {
   const { userId, subtaskId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -148,7 +148,7 @@ const replaceSubtask = async (req: Request, res: Response) => {
       return;
     }
 
-    const subtask = { title, description, status, priority };
+    const subtask = { title, description, status, priority, dueDate };
 
     const replacedSubtask = await replaceSubtaskService(
       Number(userId),
@@ -164,7 +164,7 @@ const replaceSubtask = async (req: Request, res: Response) => {
 
 const updateSubtask = async (req: Request, res: Response) => {
   const { userId, subtaskId } = req.params;
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
@@ -182,7 +182,7 @@ const updateSubtask = async (req: Request, res: Response) => {
       return;
     }
 
-    const subtask = { title, description, status, priority };
+    const subtask = { title, description, status, priority, dueDate };
 
     const updatedSubtask = await updateSubtaskService(
       Number(userId),

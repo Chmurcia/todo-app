@@ -8,6 +8,7 @@ const createSubtaskService = async (taskId: number, subtask: Task) => {
       description: subtask.description,
       status: subtask.status,
       priority: subtask.priority,
+      duedate: subtask.dueDate,
       taskId: Number(taskId),
       updatedBy: undefined,
     },
@@ -62,6 +63,7 @@ const replaceSubtaskService = async (
       description: subtask.description,
       status: subtask.status,
       priority: subtask.priority,
+      duedate: subtask.dueDate,
       updatedBy: Number(userId),
     },
   });
@@ -85,6 +87,7 @@ const updateSubtaskService = async (
       }),
       ...(subtask.status !== undefined && { status: subtask.status }),
       ...(subtask.priority !== undefined && { priority: subtask.priority }),
+      ...(subtask.dueDate !== undefined && { duedate: subtask.dueDate }),
       updatedBy: Number(userId),
     },
   });
