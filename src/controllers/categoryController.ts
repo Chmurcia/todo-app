@@ -22,9 +22,15 @@ const createCategory = async (req: Request, res: Response) => {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
 
-    const category = await createCategoryService(Number(userId), categoryName);
+    const createdCategory = await createCategoryService(
+      Number(userId),
+      categoryName
+    );
 
-    res.status(200).json({ status: 200, category });
+    res
+      .status(201)
+      .location(`/api/v1/user/${userId}/task/category/${createdCategory.id}`)
+      .json({ status: 201, createdCategory });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }
@@ -57,7 +63,7 @@ const createTaskCategory = async (req: Request, res: Response) => {
       Number(categoryId)
     );
 
-    res.status(200).json({ status: 200, taskCategory });
+    res.status(201).json({ status: 201, taskCategory });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }

@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { checkArchivedTaskExists, checkUserExists } from "../utils/helpers";
+import {
+  checkArchivedTaskExists,
+  checkTaskExists,
+  checkUserExists,
+} from "../utils/helpers";
 import {
   createArchivedTaskService,
   deleteArchivedTaskService,
@@ -22,12 +26,18 @@ const createArchivedTask = async (req: Request, res: Response) => {
       return;
     }
 
-    const archivedTask = await createArchivedTaskService(Number(userId), {
-      title,
-      description,
-    });
+    const createdArchivedTask = await createArchivedTaskService(
+      Number(userId),
+      {
+        title,
+        description,
+      }
+    );
 
-    res.status(200).json({ status: 200, archivedTask });
+    res
+      .status(201)
+      .location(`/api/v1/user/${userId}/task/archive/${createdArchivedTask.id}`)
+      .json({ status: 201, createdArchivedTask });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }

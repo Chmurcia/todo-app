@@ -27,13 +27,18 @@ const createComment = async (req: Request, res: Response) => {
       return;
     }
 
-    const comment = await createCommentService(
+    const createdComment = await createCommentService(
       Number(userId),
       Number(taskId),
       content
     );
 
-    res.status(200).json({ status: 200, comment });
+    res
+      .status(201)
+      .location(
+        `/api/v1/user/${userId}/task/${taskId}/comment/${createdComment.id}`
+      )
+      .json({ status: 201, createdComment });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }

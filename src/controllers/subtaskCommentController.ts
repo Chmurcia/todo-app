@@ -28,13 +28,18 @@ const createSubtaskComment = async (req: Request, res: Response) => {
       return;
     }
 
-    const subtaskComment = await createSubtaskCommentService(
+    const createdSubtaskComment = await createSubtaskCommentService(
       Number(userId),
       Number(subtaskId),
       content
     );
 
-    res.status(200).json({ status: 200, subtaskComment });
+    res
+      .status(201)
+      .location(
+        `/api/v1/user/${userId}/task/:taskId/subtask/${subtaskId}/comment/${createdSubtaskComment.id}`
+      )
+      .json({ status: 201, createdSubtaskComment });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }

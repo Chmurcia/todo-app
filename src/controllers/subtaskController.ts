@@ -17,9 +17,12 @@ import {
 import { TaskFilters, TaskSort } from "../utils/types";
 
 const createSubtask = async (req: Request, res: Response) => {
-  const { taskId } = req.params;
+  const { userId, taskId } = req.params;
   const { title, description, status, priority } = req.body;
   try {
+    const userExists = await checkUserExists(Number(userId), res);
+    if (!userExists) return;
+
     const taskExists = await checkTaskExists(Number(taskId), res);
     if (!taskExists) return;
     if (
@@ -45,7 +48,12 @@ const createSubtask = async (req: Request, res: Response) => {
 
     const createdSubtask = await createSubtaskService(Number(taskId), subtask);
 
-    res.status(200).json({ status: 200, createdSubtask });
+    res
+      .status(201)
+      .location(
+        `/api/v1/user/${userId}/task/${taskId}/subtask/${createdSubtask.id}`
+      )
+      .json({ status: 201, createdSubtask });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }

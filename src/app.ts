@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+// ROUTES
 import { taskRouter } from "./routes/taskRoutes";
 import { categoryRouter } from "./routes/categoryRoutes";
 import { commentRouter } from "./routes/taskCommentRoutes";
@@ -16,6 +17,7 @@ const app = express();
 
 app.use(express.json());
 
+// ROUTES
 app.use(taskRouter);
 app.use(categoryRouter);
 app.use(commentRouter);

@@ -46,7 +46,10 @@ const createTask = async (req: Request, res: Response) => {
     const task = { title, description, status, priority };
     const createdTask = await createTaskService(Number(userId), task);
 
-    res.status(201).json({ status: 201, task: createdTask });
+    res
+      .status(201)
+      .location(`/api/v1/user/${userId}/task/${createdTask.id}`)
+      .json({ status: 201, task: createdTask });
   } catch (error) {
     res.status(500).json({ status: 500, error });
   }
