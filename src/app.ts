@@ -9,6 +9,8 @@ import { subtaskRouter } from "./routes/subtaskRoutes";
 import { subtaskCommentRouter } from "./routes/subtaskCommentRoutes";
 import { userRouter } from "./routes/userRoutes";
 
+import { authenticateToken } from "./middlewares/authMiddleware";
+
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -18,12 +20,12 @@ const app = express();
 app.use(express.json());
 
 // ROUTES
-app.use(taskRouter);
-app.use(categoryRouter);
-app.use(commentRouter);
-app.use(archivedRouter);
-app.use(subtaskRouter);
-app.use(subtaskCommentRouter);
+app.use(authenticateToken, taskRouter);
+app.use(authenticateToken, categoryRouter);
+app.use(authenticateToken, commentRouter);
+app.use(authenticateToken, archivedRouter);
+app.use(authenticateToken, subtaskRouter);
+app.use(authenticateToken, subtaskCommentRouter);
 app.use(userRouter);
 
 app.listen(PORT, () => console.log(`Server's listening on port ${PORT}`));
