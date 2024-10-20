@@ -20,12 +20,13 @@ const app = express();
 app.use(express.json());
 
 // ROUTES
+app.use(userRouter);
+
 app.use(authenticateToken, taskRouter);
 app.use(authenticateToken, categoryRouter);
 app.use(authenticateToken, commentRouter);
 app.use(authenticateToken, archivedRouter);
 app.use(authenticateToken, subtaskRouter);
 app.use(authenticateToken, subtaskCommentRouter);
-app.use(userRouter);
 
 app.listen(PORT, () => console.log(`Server's listening on port ${PORT}`));
