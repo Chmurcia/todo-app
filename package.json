@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon dist/app.js",
-    "build": "tsc"
+    "start": "nodemon dist/src/app.cjs",
+    "build": "tsc",
+    "test": "mocha -r ts-node/register 'dist/test/**/*.test.mjs'"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +20,17 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/chai": "^5.0.0",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^22.7.5",
+    "@types/supertest": "^6.0.2",
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
     "nodemon": "^3.1.7",
     "prisma": "^5.20.0",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }

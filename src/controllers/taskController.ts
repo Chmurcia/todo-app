@@ -15,6 +15,7 @@ import {
   isValidStatus,
 } from "../utils/helpers";
 import { TaskFilters, TaskSort } from "../utils/types";
+import { prisma } from "../utils/prisma";
 
 const createTask = async (req: Request, res: Response) => {
   const { userId } = req.params;
@@ -110,6 +111,15 @@ const getTask = async (req: Request, res: Response) => {
   try {
     const userExists = await checkUserExists(Number(userId), res);
     if (!userExists) return;
+
+    const taskExists = await checkTaskExists(Number(taskId), res);
+    if (!taskExists) return;
+
+    const isAuthorizated = checkAuthorization(
+      taskExists.userId === Number(userId),
+      res
+    );
+    if (!isAuthorizated) return;
 
     const task = await getTaskService(Number(userId), Number(taskId));
 

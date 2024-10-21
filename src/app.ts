@@ -30,3 +30,5 @@ app.use(authenticateToken, subtaskRouter);
 app.use(authenticateToken, subtaskCommentRouter);
 
 app.listen(PORT, () => console.log(`Server's listening on port ${PORT}`));
+
+export = app;
